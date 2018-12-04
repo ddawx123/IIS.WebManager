@@ -46,7 +46,7 @@ import { Binding } from './site';
                     <div class="valign" *ngIf="edit">
                         <fieldset class="col-xs-8 col-md-4" *ngIf="isHttp()">
                             <label>Host Name</label>
-                            <input class="form-control" type="text" [(ngModel)]="model.hostname"/>
+                            <input id="first-form-control" class="form-control" type="text" [(ngModel)]="model.hostname"/>
                         </fieldset>
                         <fieldset class="col-xs-12 col-sm-10 col-md-4" *ngIf="isHttp()">
                             <label>IP Address</label>
@@ -337,6 +337,7 @@ export class BindingItem implements OnInit, OnChanges {
     onEdit() {
         this.edit = true;
         this.editing.emit(this.model);
+        setTimeout(()=>document.getElementById("first-form-control").focus());
     }
 
     onSave() {
