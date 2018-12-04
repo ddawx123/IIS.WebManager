@@ -27,10 +27,6 @@ export class ComponentUtil {
         };
     }
 
-    public static selectFirstFormControl() {
-        setTimeout(()=>document.getElementById("first-form-control").focus());
-    }
-
     private static goTo(element: HTMLElement) {
         var HEADER_HEIGHT = 35;
         let mainContainer = document.getElementById('mainContainer');

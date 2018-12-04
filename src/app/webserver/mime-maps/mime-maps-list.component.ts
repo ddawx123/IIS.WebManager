@@ -15,7 +15,7 @@ import { StaticContentService } from '../static-content/static-content.service';
             <fieldset class="col-xs-8 col-sm-3 col-md-4">
                 <label class="visible-xs">File Extension</label>
                 <label class="hidden-xs" *ngIf="_editing">File Extension</label>
-                <input id="first-form-control" *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.file_extension" throttle required />
+                <input autofocus *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.file_extension" throttle required />
                 <span *ngIf="!_editing">{{model.file_extension}}</span>
                 <div *ngIf="!_editing">
                     <br class="visible-xs" />
@@ -140,7 +140,6 @@ export class MimeMapListItem implements OnInit, OnChanges {
     private scheduleScroll() {
         setTimeout(() => {
             ComponentUtil.scrollTo(this._eRef);
-            ComponentUtil.selectFirstFormControl();
         });
     }
 
