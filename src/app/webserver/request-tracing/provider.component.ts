@@ -19,7 +19,6 @@ import {RequestTracingService} from './request-tracing.service';
                 <fieldset>
                     <label>Name</label>
                     <input autofocus class="form-control name" type="text" [(ngModel)]="model.name" required throttle/>
-                    <span>{{model.name}}</span>
                 </fieldset>
                 <fieldset class="name" >
                     <label>Guid</label>

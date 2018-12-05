@@ -49,8 +49,18 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                                 <td class="back-ref border-color">{{ '{R:' + i + '}' }}</td>
                                 <td class="border-color">{{match}}</td>
                             </tr>
-                            <tr *ngFor="let variable of _serverVariables; let i = index;" (dblclick)="addVariable(i)" (click)="select(i + _matches.length)" class="hover-editing" [class.background-selected]="_selected == (i + _matches.length)">
-                                <td class="back-ref border-color">{{ '{' + variable + '}' }}</td>
+                            <tr *ngFor="let variable of _serverVariables; let i = index;" 
+                                (keyup.esc)="macros.toggle()" 
+                                (keyup.enter)="addVariable(i)" 
+                                (dblclick)="addVariable(i)"
+                                (keyup.space)="select(i + _matches.length)" 
+                                (click)="select(i + _matches.length)" 
+                                class="hover-editing" 
+                                [class.background-selected]="_selected == (i + _matches.length)">
+
+                                <td class="back-ref border-color">
+                                    <span tabindex="0">{{ '{' + variable + '}' }}</span>
+                                </td>
                                 <td class="border-color"></td>
                             </tr>
                         </table>
