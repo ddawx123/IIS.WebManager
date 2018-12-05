@@ -119,7 +119,7 @@ span.form-control {
 }
 
 .form-control[hidden] {
-    display: none;
+    display: none !important;
 }
 
 input[type='number'] {
