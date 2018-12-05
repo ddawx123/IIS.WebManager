@@ -9,7 +9,7 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
         <div class="col-xs-12 col-lg-6">
             <fieldset>
                 <label>Name</label>
-                <input type="text" required class="form-control" [(ngModel)]="rule.name" />
+                <input autofocus type="text" required class="form-control" [(ngModel)]="rule.name" />
             </fieldset>
             <fieldset>
                 <div>
