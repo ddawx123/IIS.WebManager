@@ -39,9 +39,7 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/url-rewrite-module-configuration-reference" class="link"></a>
                     </tooltip>
                 </div>
-                <div class="fill">
-                    <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
-                </div>
+                <input type="text" required [title]="_result" class="form-control left-with-button" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
                 <button class="input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                 <selector class="stretch" #macros>
                     <div class="table-scroll">
@@ -75,11 +73,6 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
     </div>
     `,
     styles: [`
-        .fill {
-            float: left;
-            width: 80%;
-        }
-
         table {
             width: 100%;
         }

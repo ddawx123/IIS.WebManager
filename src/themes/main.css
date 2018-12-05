@@ -133,6 +133,11 @@ input:not(:required).ng-invalid {
     border-left-style: solid;
 }
 
+.left-with-button {
+    float: left;
+    width: 80%;
+}
+
 .bttn {
     display: inline-block;
     margin-bottom: 0;

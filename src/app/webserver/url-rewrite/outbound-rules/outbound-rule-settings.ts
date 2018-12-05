@@ -38,9 +38,7 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
                     </tooltip>
                 </div>
-                <div class="fill">
-                    <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
-                </div>
+                <input type="text" required [title]="_result" class="form-control left-with-button" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
                 <button class="input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                 <selector class="stretch" #macros>
                     <div class="table-scroll">
