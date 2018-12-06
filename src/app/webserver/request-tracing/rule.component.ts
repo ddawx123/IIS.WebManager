@@ -12,7 +12,7 @@ import { RequestTracingService } from './request-tracing.service';
     selector: 'rule',
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_isEditing">
-            <div class="col-xs-8 overflow-visible">
+            <div class="col-xs-8 col-sm-4 col-lg-5 overflow-visible">
                 <fieldset class="col-xs-8 col-sm-4 col-md-3" *ngIf="!_isEditing">
                     <span>{{model.path}}</span>
                 </fieldset>

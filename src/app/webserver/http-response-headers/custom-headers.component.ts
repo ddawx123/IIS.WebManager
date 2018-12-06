@@ -15,21 +15,7 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
         <ul class="grid-list container-fluid">
             <li *ngFor="let header of headers; let i = index;">
                 <div class="row grid-item" [class.background-editing]="_editing == i">
-                    <div class="actions">
-                        <button class="no-border" title="Ok" [disabled]="locked || !isValid(header) || null" *ngIf="_editing == i" (click)="onFinishEditing(i)">
-                            <i class="fa fa-check color-active"></i>
-                        </button>
-                        <button class="no-border" title="Cancel" *ngIf="_editing == i" (click)="discard()">
-                            <i class="fa fa-times red"></i>
-                        </button>
-                        <button class="no-border" title="Edit" [class.inactive]="_editing != -1" *ngIf="_editing != i" (click)="edit(i)">
-                            <i class="fa fa-pencil color-active"></i>
-                        </button>
-                        <button class="no-border" *ngIf="header.id" title="Delete" [disabled]="locked || _editing == i" [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
-                            <i class="fa fa-trash-o red"></i>
-                        </button>
-                    </div>
-                    <fieldset class="col-xs-8 col-sm-4 col-lg-5">
+                    <fieldset class="col-xs-8 col-sm-4 col-lg-5 overflow-visible">
                         <label class="visible-xs">Name</label>
                         <label *ngIf="_editing == i" class="hidden-xs">Name</label>
                         <span *ngIf="_editing != i">{{header.name}}</span>
@@ -44,6 +30,20 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
                         <span *ngIf="_editing != i">{{header.value}}</span>
                         <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.value" throttle required />
                     </fieldset>
+                    <div class="actions">
+                        <button class="no-border" title="Ok" [disabled]="locked || !isValid(header) || null" *ngIf="_editing == i" (click)="onFinishEditing(i)">
+                            <i class="fa fa-check color-active"></i>
+                        </button>
+                        <button class="no-border" title="Cancel" *ngIf="_editing == i" (click)="discard()">
+                            <i class="fa fa-times red"></i>
+                        </button>
+                        <button class="no-border" title="Edit" [class.inactive]="_editing != -1" *ngIf="_editing != i" (click)="edit(i)">
+                            <i class="fa fa-pencil color-active"></i>
+                        </button>
+                        <button class="no-border" *ngIf="header.id" title="Delete" [disabled]="locked || _editing == i" [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
+                            <i class="fa fa-trash-o red"></i>
+                        </button>
+                    </div>
                 </div>
             </li>
         </ul>
