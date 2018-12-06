@@ -74,7 +74,7 @@ import { UrlRewriteService } from './service/url-rewrite.service';
         TextCheckbox,
         StringList,
         Tooltip,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         UrlRewriteComponent,

@@ -54,7 +54,7 @@ import { LimitsComponent } from './limits.component';
         VirtualList,
         Enum,
         RouterModule,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         WebSiteComponent,

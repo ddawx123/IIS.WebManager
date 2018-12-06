@@ -30,7 +30,7 @@ import { RulesComponent, RuleComponent } from './rules.component';
         StringList,
         ErrorComponent,
         Tabs,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         FileExtensionsComponent,

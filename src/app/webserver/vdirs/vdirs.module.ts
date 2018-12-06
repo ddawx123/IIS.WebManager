@@ -26,7 +26,7 @@ import { VdirListComponent, VdirListItem } from './vdir-list.component';
         Switch,
         Sort,
         Enum,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         VdirListComponent,

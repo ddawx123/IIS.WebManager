@@ -15,7 +15,7 @@ import {RequestTracingService} from './request-tracing.service';
             <fieldset class="col-xs-8" *ngIf="!_isEditing">
                 <span>{{model.name}}</span>
             </fieldset>
-            <div class="col-xs-10 overflow-visible" *ngIf="_isEditing">
+            <div class="col-xs-8 overflow-visible" *ngIf="_isEditing">
                 <fieldset>
                     <label>Name</label>
                     <input autofocus class="form-control name" type="text" [(ngModel)]="model.name" required throttle/>

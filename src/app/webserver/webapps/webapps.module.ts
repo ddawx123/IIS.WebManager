@@ -44,7 +44,7 @@ import { NewWebAppComponent } from './new-webapp.component';
         Sort,
         Selector,
         Tabs,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         WebAppComponent,

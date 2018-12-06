@@ -55,7 +55,7 @@ import { TraceFileComponent } from './trace-file.component';
         Warning,
         Tabs,
         FilesModule,
-        AutoFocus
+        AutoFocus,
     ],
     declarations: [
         ProvidersComponent,

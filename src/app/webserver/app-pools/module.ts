@@ -29,7 +29,7 @@ import { IdentityComponent } from './identity.component';
         Sort,
         Selector,
         Enum,
-        AutoFocus
+        AutoFocus,
     ],
     exports: [
         AppPoolList,
