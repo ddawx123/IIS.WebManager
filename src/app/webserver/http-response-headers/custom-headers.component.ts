@@ -19,7 +19,7 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
                         <label class="visible-xs">Name</label>
                         <label *ngIf="_editing == i" class="hidden-xs">Name</label>
                         <span *ngIf="_editing != i">{{header.name}}</span>
-                        <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
+                        <input autofocus *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
                         <div *ngIf="_editing !== i">
                             <br class="visible-xs" />
                         </div>
