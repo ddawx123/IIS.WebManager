@@ -1,9 +1,6 @@
 
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-
-import {AppPoolsService} from './app-pools.service';
 import {ApplicationPool} from './app-pool';
-
 
 @Component({
     selector: 'app-pool-general',

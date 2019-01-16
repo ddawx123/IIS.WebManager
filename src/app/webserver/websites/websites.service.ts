@@ -26,7 +26,6 @@ export class WebSitesService implements OnDestroy {
 
     private _subscriptions: Array<Subscription> = [];
 
-
     constructor(private _http: HttpClient,
                 private _notificationService: NotificationService,
                 @Optional() @Inject("WebServerService") webServerService: WebServerService,

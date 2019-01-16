@@ -39,11 +39,15 @@ export class SectionHelper implements IDisposable {
             }));
         }
 
-        this.section = defaultSection || "";
+        if (defaultSection) {
+            this.section = defaultSection
+        }
+    }
 
+    public selectFirstSection() {
         // Automatically navigate to first section if no default provided
-        if (!this.section && sections.length > 0) {
-            this.navigateSection(sections[0]);
+        if (this._sections.length > 0 && !this.section) {
+            this.navigateSection(this._sections[0]);
         }
     }
 
@@ -69,11 +73,14 @@ export class SectionHelper implements IDisposable {
 
     private set section(val: string) {
         let v = SectionHelper.normalize(val);
-        this._active.next(this._sections.find(s => SectionHelper.normalize(s) === v));
+        let section = this._sections.find(s => SectionHelper.normalize(s) === v)
+        if (section) {
+            this._active.next(section);
+        }
     }
 
-    public get active(): Observable<string> {
-        return this._active.asObservable();
+    public subscribe(callback: (val: string) => any) {
+        return this._active.asObservable().subscribe(callback);
     }
 
     public selectSection(name: string) {

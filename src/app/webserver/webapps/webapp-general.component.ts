@@ -1,12 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { NgModel } from '@angular/forms';
-
 import { Selector } from '../../common/selector';
 import { ApiFile } from '../../files/file';
 import { WebApp } from './webapp'
-import { AppPoolItem } from '../app-pools/app-pool-list';
 import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
-
 
 @Component({
     selector: 'webapp-general',

@@ -30,7 +30,6 @@ export class FilesComponent implements OnInit, OnDestroy {
 
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _navSvc: FileNavService) {
-        
         this._subscriptions.push(this._navSvc.current.pipe(
             filter(dir => !!dir)
         ).subscribe(dir => this._current = dir));

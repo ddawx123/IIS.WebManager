@@ -781,20 +781,13 @@ a.link:before {
     padding: 0;
     margin: 0;
     margin-right: 10px;
-    position: fixed;
+    position: sticky;
     padding-bottom: 5px;
     display: inline-block;
     overflow: hidden;
     overflow-y: auto;
     left: 0;
     padding-left: 10px;
-    border-right-style: solid;
-    border-right-width: 1px;
-}
-
-.sidebar vtabs .vtabs > .items,
-.sidebar > .items {
-    padding-top: 10px;
 }
 
 .sidebar vtabs .items {
@@ -804,16 +797,18 @@ a.link:before {
 .sidebar .items li {
     min-width: 150px;
     line-height: 250%;
-    cursor: pointer;
     font-size: 14px;
     font-family: 'Segoe UI';
     padding: 0;
     font-weight: 500;
     position: relative;
-
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.sidebar .items li :not(.divider) {
+    cursor: pointer;
 }
 
 .sidebar.crumb > .items li {
@@ -872,7 +867,6 @@ a.link:before {
 
 .sidebar hr {
     margin-bottom: 0;
-    margin-top: 5px;
     margin-right: 10px;
     border-style: solid;
     border-width: 1px;

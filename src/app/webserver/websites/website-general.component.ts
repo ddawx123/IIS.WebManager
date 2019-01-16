@@ -1,17 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgModel } from '@angular/forms';
-
 import { Selector } from '../../common/selector';
-
 import { ApiFile } from '../../files/file';
-import { WebSite, Binding } from './site';
-import { WebSitesService } from './websites.service';
-import { BindingList } from './binding-list.component';
-
+import { WebSite } from './site';
 import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
-import { AppPoolsService } from '../app-pools/app-pools.service';
-
 
 @Component({
     selector: 'website-general',

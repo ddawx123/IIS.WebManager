@@ -27,16 +27,16 @@ import {
         <div>
             <div class="sidebar" [class.nav]="options.active">
                 <vtabs [markLocation]="true" (activate)="options.refresh()">
-                    <item [name]="'Web Sites'" [ico]="'fa fa-globe'">
+                    <vtabs-item [name]="'Web Sites'" [ico]="'fa fa-globe'">
                         <dynamic [name]="'WebSiteListComponent'" [module]="WebSiteListComponentReference"></dynamic>
-                    </item>
-                    <item [name]="'Web Server'" [ico]="'fa fa-server'" [routerLink]="['/webserver']"></item>
-                    <item [name]="'Files'" [ico]="'fa fa-files-o'">
+                    </vtabs-item>
+                    <vtabs-item [name]="'Web Server'" [ico]="'fa fa-server'" [routerLink]="['/webserver']"></vtabs-item>
+                    <vtabs-item [name]="'Files'" [ico]="'fa fa-files-o'">
                         <dynamic [name]="'FilesComponent'" [module]="FilesComponentReference"></dynamic>
-                    </item>
-                    <item [name]="'Monitoring'" [ico]="'fa fa-medkit'">
+                    </vtabs-item>
+                    <vtabs-item [name]="'Monitoring'" [ico]="'fa fa-medkit'">
                         <dynamic [name]="'MonitoringComponent'" [module]="MonitoringComponentReference"></dynamic>
-                    </item>
+                    </vtabs-item>
                 </vtabs>
             </div>
         </div>

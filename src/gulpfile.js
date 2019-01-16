@@ -183,7 +183,6 @@ gulp.task('generate-powershell-code', () => {
         .pipe(psCode({ powerShellModuleName: powerShellModule.name }))
         .pipe(gulp.dest('app/generated/'));
 });        
-
 gulp.task('generate-powershell-module', () => {
     const powerShellModulePaths = [];
     powerShellModule.list.forEach(item => {

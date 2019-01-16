@@ -1,5 +1,5 @@
 
-import {NgModule, Directive, Input, ReflectiveInjector, ModuleWithComponentFactories, ComponentFactory, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
+import {NgModule, Directive, Input, ReflectiveInjector, NgModuleRef, ComponentRef, Compiler, OnInit, Injector, Inject, ViewContainerRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ComponentLoader} from './component-loader';
@@ -22,8 +22,10 @@ export class DynamicComponent implements OnInit {
     private _moduleRef: NgModuleRef<any>;
     private _componentRef: ComponentRef<any>;
 
-    constructor(private vcRef: ViewContainerRef, private compiler: Compiler) {
-    }
+    constructor(
+        private vcRef: ViewContainerRef,
+        private compiler: Compiler,
+    ) {}
 
     ngOnInit() {
         if (this.eager) {
@@ -82,7 +84,6 @@ export class DynamicComponent implements OnInit {
             return Promise.resolve();
         }
 
-        let vRef = this.vcRef;
         return ComponentLoader.LoadAsync(this.compiler, this.module)
             .then(moduleWithComponentFactories => {
 
@@ -90,7 +91,7 @@ export class DynamicComponent implements OnInit {
                     return x.componentType.name == this.name;
                 });
 
-                let injector: Injector = ReflectiveInjector.fromResolvedProviders([], vRef.parentInjector);
+                let injector: Injector = ReflectiveInjector.fromResolvedProviders([], this.vcRef.parentInjector);
 
                 // AppModule is the main module, it is never loaded dynamically and it imports the browser module which can only be imported once
                 if (moduleWithComponentFactories.ngModuleFactory.moduleType.name != "AppModule") {

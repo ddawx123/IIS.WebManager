@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { ComponentUtil } from '../utils/component';
 import { SectionHelper } from './section.helper';
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 
 @Component({
     selector: 'tabs',
@@ -207,25 +208,28 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     private _tabsItems: Array<ElementRef>;
     private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
+    private logger: Logger;
 
     @ViewChild('menuBtn') menuBtn: ElementRef;
     @ViewChildren('item') tabList: QueryList<ElementRef>;
 
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _elem: ElementRef,
-                private _renderer: Renderer,
-                private _activatedRoute: ActivatedRoute,
-                private _location: Location,
-                private _router: Router) {
-
+    constructor(
+        private loggerFactory: LoggerFactory,
+        private _activatedRoute: ActivatedRoute,
+        private _location: Location,
+        private _router: Router,
+    ) {
+        this.logger = loggerFactory.Create(this);
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }
 
     public ngAfterViewInit() {
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
-        this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
+        this._sectionHelper.selectFirstSection();
+        this._subscriptions.push(this._sectionHelper.subscribe(sec => this.onSectionChange(sec)));
 
         this._tabsItems = this.tabList.toArray();
         window.setTimeout(() => {
@@ -265,16 +269,21 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private onSectionChange(section: string) {
-        let index = this.tabs.findIndex(t => t.name === section);
+        if (section) {
+            let index = this.tabs.findIndex(t => t.name === section);
 
-        if (index == -1) {
-            index = 0;
+            if (index < 0) {
+                this.logger.log(LogLevel.ERROR, `Invalid section: ${section}`)
+                index = 0;
+            }
+    
+            this.tabs.forEach(t => t.deactivate());
+            this.tabs[index].activate();
+            this._selectedIndex = index;
+            this.refresh();
+        } else {
+            this.logger.log(LogLevel.WARN, `Empty section: ${section}`)
         }
-
-        this.tabs.forEach(t => t.deactivate());
-        this.tabs[index].activate();
-        this._selectedIndex = index;
-        this.refresh();
     }
 
     private showMenu(show: boolean) {

@@ -1,10 +1,11 @@
-import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener } from '@angular/core';
+import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener, ComponentFactoryResolver, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Angulartics2 } from 'angulartics2';
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
+import { ConnectService } from 'connect/connect.service';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -15,18 +16,10 @@ import { environment } from 'environments/environment';
         }
 
         #flexWrapper {
-             padding-top:35px;
              overflow-x:hidden;
              width:100%;
              display: flex;
              height: 100%;
-        }
-
-        #wacFlexWrapper {
-            overflow-x:hidden;
-            width:100%;
-            display: flex;
-            height: 100%;
         }
 
         #mainContainer {
@@ -52,20 +45,37 @@ import { environment } from 'environments/environment';
     templateUrl: "./app.component.html",
 })
 export class AppComponent implements OnInit {
+    isConnected: boolean
+
     constructor(private _router: Router,
         private _loadingSvc: LoadingService,
         private _windowService: WindowService,
         private _renderer: Renderer,
+        private _connect: ConnectService,
         @Inject("Runtime") private runtime: Runtime,
         angulartics2: Angulartics2,
         angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+        this.isConnected = false
     }
 
     @ViewChild('mainContainer') mainContainer: ElementRef;
+    currentComponent: any
 
     ngOnInit() {
         this.runtime.OnAppInit()
         this._windowService.initialize(this.mainContainer, this._renderer)
+        this._connect.active.subscribe(c => {
+            if (c) {
+                this.isConnected = true
+            }})
+    }
+
+    onActivate(event) {
+        this.currentComponent = event
+    }
+
+    showBreadcrumbs() {
+        return this.isConnected && this.currentComponent && this.currentComponent.hasOwnProperty('breadcrumb')
     }
 
     showHeader() {

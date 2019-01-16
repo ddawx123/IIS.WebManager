@@ -1,13 +1,11 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, ViewContainerRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
 import {ModuleUtil} from '../../utils/module';
 import {DiffUtil} from '../../utils/diff';
 import {OptionsService} from '../../main/options.service';
-
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
-
+import { BreadcrumbService } from 'header/breadcrumbs.service';
 
 @Component({
     template: `
@@ -16,17 +14,16 @@ import {AppPoolsService} from './app-pools.service';
         <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
 
         <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs sme-focus-zone">
-                <li><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
-            </ul>
-            <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
+            <vtabs [contextName]="'APP POOL'" [markLocation]="true" (activate)="_options.refresh()">
+                <context-tab [reference]="webSiteRef"></context-tab>
+                <context-tab [reference]="appPoolRef"></context-tab>
+                <context-tab [reference]="filesRef"></context-tab>
+                <vtabs-item [name]="'General'" [ico]="'fa fa-wrench'">
                     <app-pool-general [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
-                </item>
-                <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
+                </vtabs-item>
+                <vtabs-item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
                     <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </item>
+                </vtabs-item>
             </vtabs>
         </div>
         `,
@@ -46,10 +43,12 @@ export class AppPoolComponent implements OnInit {
     private modules: Array<any> = [];
     private _original: ApplicationPool;
 
-    constructor(private _route: ActivatedRoute,
-                @Inject("AppPoolsService") private _service: AppPoolsService,
-                private _options: OptionsService,
-                private _router: Router) {
+    constructor(
+        @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
+        @Inject("AppPoolsService") private _service: AppPoolsService,
+        private _route: ActivatedRoute,
+        private _options: OptionsService,
+        private _router: Router) {
 
         this.id = this._route.snapshot.params['id'];
     }

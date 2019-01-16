@@ -5,9 +5,9 @@ import { OptionsService } from '../main/options.service';
     template: `
         <div class="sidebar crumb" [class.nav]="options.active">
             <vtabs [markLocation]="true">
-                <item [name]="'Servers'" [ico]="'fa fa-server'">
+                <vtabs-item [name]="'Servers'" [ico]="'fa fa-server'">
                     <server-list></server-list>
-                </item>
+                </vtabs-item>
             </vtabs>
         </div>
     `,

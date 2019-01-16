@@ -1,19 +1,18 @@
-import { Component, Inject } from '@angular/core';
-
+import { Component, Inject, ViewContainerRef, OnInit, AfterContentInit, ViewChild, ViewChildren } from '@angular/core';
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
-
 import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { ComponentReference, FilesComponentName } from '../main/settings';
+import { CertificatesModuleName, ApplicationPoolsModuleName, WebSitesModuleName, AppPoolModuleReference, WebsitesModuleReference, FilesComponentReference, ComponentReference } from '../main/settings';
 import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
-import { Observable } from 'rxjs';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
+import { BreadcrumbService } from 'header/breadcrumbs.service';
+import { Breadcrumb, BreadcrumbRoot } from 'header/breadcrumb';
+import { VTabsComponent } from 'common/vtabs.component';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
@@ -29,6 +28,8 @@ const sidebarStyles = `
     margin-top: 50px;
 }
 `
+
+const WebServerBreadcrumb = new Breadcrumb('WebServer', ['/webserver'])
 
 @Component({
     template: `
@@ -46,23 +47,34 @@ const sidebarStyles = `
             <div class="sidebar crumb" [class.nav]="_options.active">
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="'Web Sites'">
                     <item [name]="'Web Server'" [ico]="'fa fa-wrench'">
+                    <context-tab [reference]="webSiteRef"></context-tab>
+                    <context-tab [reference]="appPoolRef"></context-tab>
+                    <context-tab [reference]="filesRef"></context-tab>
+                    <vtabs-item [name]="'General'" [ico]="'fa fa-wrench'">
                         <webserver-general [model]="webServer"></webserver-general>
-                    </item>
-                    <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
+                    </vtabs-item>
+                    <vtabs-item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
                         <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                    </item>
+                    </vtabs-item>
                 </vtabs>
             </div>
         </div>
     `,
     styles: [ sidebarStyles ]
 })
-export class WebServerComponent {
+export class WebServerComponent implements OnInit, AfterContentInit {
     webServer: WebServer;
     modules: Array<any> = [];
     failure: string;
 
+    appPoolRef: ComponentReference = AppPoolModuleReference;
+    webSiteRef: ComponentReference = WebsitesModuleReference;
+    filesRef: ComponentReference = FilesComponentReference;
+
+    @ViewChild(VTabsComponent) vtab: VTabsComponent
+
     constructor(
+        @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
         private _http: HttpClient,
@@ -74,16 +86,20 @@ export class WebServerComponent {
         this.server.then(ws => {
             this.webServer = ws;
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
-            ModuleUtil.addModule(this.modules, "Certificates");
-
-            // Insert files global module after application pools
-            let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
-            this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
+            ModuleUtil.addModule(this.modules, CertificatesModuleName);
+            // HACK: since application pools and web sites are global modules, we don't need them here
+            this.modules.splice(this.modules.findIndex(m => m.name == ApplicationPoolsModuleName), 1);
+            this.modules.splice(this.modules.findIndex(m => m.name == WebSitesModuleName), 1);
             this._http.head(CertificatesServiceURL, null, false)
                 .catch(_ => {
-                    this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
+                    this.modules = this.modules.filter(m => m.name != CertificatesModuleName)
                 });
+            this.breadcrumb.goto(environment.WAC? BreadcrumbRoot : WebServerBreadcrumb)
         })
+    }
+
+    ngAfterContentInit() {
+        // TODO: select web sites after view init
     }
 
     get service() {
