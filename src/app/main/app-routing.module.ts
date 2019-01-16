@@ -43,7 +43,6 @@ if (environment.WAC) {
     const wacRoutes = (<Routes>[
         { path: '', redirectTo: '/webserver', pathMatch: 'full' },
         { path: 'idle', component: WACIdleComponent },
-        { path: 'install', component: InstallComponent },
         { path: 'wac', loadChildren: LoadWACModule },
     ]).concat(commonRoutes)
     appRoutes = wacRoutes.concat(commonRoutes)

@@ -150,6 +150,16 @@ gulp.task('generate-resjson', (cb) => {
     runSequence(['generate-resjson-json', 'generate-resjson-interface'], 'merge-localized-json', cb);
 });
 
+gulp.task('generate-angular-cli-json', (_) => {
+    var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--env=') })
+    var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
+    return gulp.src(['angular-cli.template.json', `angular-cli.${scenario}.json`])
+        .pipe(merge({
+            fileName: 'angular-cli.json'
+        }))
+        .pipe(gulp.dest('.'))
+});
+
 gulp.task('generate', (cb) => {
     runSequence(['generate-angular-cli-json', 'generate-powershell', 'generate-svg', 'generate-resjson'], cb);
 });

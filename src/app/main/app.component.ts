@@ -5,6 +5,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
+import { ConnectService } from 'connect/connect.service';
 
 @Component({
     selector: 'app-root',
@@ -14,18 +15,10 @@ import { Runtime } from '../runtime/runtime';
         }
 
         #flexWrapper {
-             padding-top:35px;
              overflow-x:hidden;
              width:100%;
              display: flex;
              height: 100%;
-        }
-
-        #wacFlexWrapper {
-            overflow-x:hidden;
-            width:100%;
-            display: flex;
-            height: 100%;
         }
 
         #mainContainer {
@@ -51,12 +44,13 @@ import { Runtime } from '../runtime/runtime';
     template: `
         <div class='content' (dragover)="dragOver($event)">
             <header *ngIf="showHeader()"></header>
-            <div id="{{ isWAC ? 'wacFlexWrapper' : 'flexWrapper' }}">
+            <breadcrumbs *ngIf="showBreadcrumbs()"></breadcrumbs>
+            <div id="flexWrapper">
                 <div class="container-fluid" id="mainContainer" #mainContainer>
                     <div class="row" id="mainRow">
                         <div class="col-xs-12">
                             <div id="bodyContent">
-                                <router-outlet></router-outlet>
+                                <router-outlet (activate)="currentComponent = $event" (deactivate) ="currentComponent = null"></router-outlet>
                             </div>
                         </div>
                     </div>
@@ -66,20 +60,33 @@ import { Runtime } from '../runtime/runtime';
     `
 })
 export class AppComponent implements OnInit {
+    isConnected: boolean
+
     constructor(private _router: Router,
         private _loadingSvc: LoadingService,
         private _windowService: WindowService,
         private _renderer: Renderer,
+        private _connect: ConnectService,
         @Inject("Runtime") private runtime: Runtime,
         angulartics2: Angulartics2,
         angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+        this.isConnected = false
     }
 
     @ViewChild('mainContainer') mainContainer: ElementRef;
+    currentComponent: any
 
     ngOnInit() {
         this.runtime.InitContext()
         this._windowService.initialize(this.mainContainer, this._renderer)
+        this._connect.active.subscribe(c => {
+            if (c) {
+                this.isConnected = true
+            }})
+    }
+
+    showBreadcrumbs() {
+        return this.isConnected && this.currentComponent && this.currentComponent.hasOwnProperty('breadcrumb')
     }
 
     showHeader() {

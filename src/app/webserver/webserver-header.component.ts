@@ -1,12 +1,8 @@
 import { Component, Input, Inject, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-
 import { Selector } from '../common/selector';
-import { Status } from '../common/status';
 import { WebServerService } from './webserver.service';
 import { WebServer } from './webserver';
-
 
 @Component({
     selector: 'webserver-header',

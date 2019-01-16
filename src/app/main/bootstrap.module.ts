@@ -31,6 +31,7 @@ import { ConnectComponent } from '../connect/connect.component';
 import { ConnectionPickerComponent } from '../connect/connection-picker.component';
 import { GetComponent } from './get.component';
 import { HeaderComponent } from '../header/header.component';
+import { BreadcrumbsComponent } from '../header/breadcrumbs.component';
 import { SettingsMenuComponent } from '../settings/settings-menu.component';
 import { NotificationComponent } from '../notification/notification.component';
 import { NotificationIndicator } from '../notification/notification-indicator';
@@ -49,6 +50,7 @@ import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { AppRoutingModule } from './app-routing.module';
 import { StandardRuntime } from '../runtime/runtime';
+import { BreadcrumbService } from 'header/breadcrumbs.service';
 
 var moduleImports: any[] =  [
     AppRoutingModule,
@@ -78,6 +80,7 @@ var moduleImports: any[] =  [
         ConnectionPickerComponent,
         GetComponent,
         HeaderComponent,
+        BreadcrumbsComponent,
         SettingsMenuComponent,
         NotificationComponent,
         NotificationIndicator,
@@ -95,7 +98,7 @@ var moduleImports: any[] =  [
         LoggerFactory,
         OptionsService,
         Angulartics2GoogleAnalytics,
-
+        { provide: "Breadcrumb", useClass: BreadcrumbService },
         { provide: "WebServerService", useClass: WebServerService },
         { provide: "WebSitesService", useClass: WebSitesService },
         { provide: "AppPoolsService", useClass: AppPoolsService },

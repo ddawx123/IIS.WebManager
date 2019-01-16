@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ViewChild, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter } from '@angular/core';
+import { NgModule, Component, Input, Output, ViewChild, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter, Query } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,22 +12,31 @@ import { environment } from 'environments/environment';
 @Component({
     selector: 'vtabs',
     template: `
-        <div class="vtabs">
-            <ul class="items sme-focus-zone">
-                <li
-                    tabindex="0"
-                    #item
-                    class="hover-edit"
-                    *ngFor="let tab of tabs; let i = index;"
-                    [ngClass]="{active: tab.active}"
-                    (keyup.space)="selectItem(i)"
-                    (keyup.enter)="selectItem(i)"
-                    (click)="selectItem(i)"
-                >
-                    <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                </li>
+        <div class="vtabs sme-focus-zone">
+            <ul id="Manage" class="items">
+                <ng-container *ngFor="let tab of contexts; let i = index;">
+                    <li class="hover-edit"
+                        [ngClass]="{active: tab.active}"
+                        (keyup.space)="switchContext(i)"
+                        (keyup.enter)="switchContext(i)"
+                        (click)="switchContext(i)">
+                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                    </li>
+                </ng-container>
             </ul>
-            <div class="content sme-focus-zone">
+            <ul id="Operations" class="items">
+                <ng-container *ngFor="let tab of tabs; let i = index;">
+                    <li #item
+                        class="hover-edit"
+                        [ngClass]="{active: tab.active}"
+                        (keyup.space)="selectItem(i)"
+                        (keyup.enter)="selectItem(i)"
+                        (click)="selectItem(i)">
+                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                    </li>
+                </ng-container>
+            </ul>
+            <div class="content">
                 <ng-content></ng-content>
             </div>
         </div>
@@ -53,6 +62,7 @@ export class VTabsComponent implements OnDestroy {
     @Input() markLocation: boolean;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
 
+    contexts: Item[];
     tabs: Item[];
 
     private _default: string;
@@ -70,7 +80,20 @@ export class VTabsComponent implements OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router) {
-
+        let webServerContext = new Item(this, this._router);
+        webServerContext.ico = 'fa fa-server';
+        webServerContext.routerLink = ['/webserver'];
+        let appPoolContext = new Item(this, this._router);
+        appPoolContext.ico = 'fa fa-cogs';
+        appPoolContext.routerLink = ['/webserver/application-pools'];
+        let websitesContext = new Item(this, this._router);
+        websitesContext.ico = 'fa fa-globe';
+        websitesContext.routerLink = ['/webserver/web-sites'];
+        this.contexts = [
+            webServerContext,
+            appPoolContext,
+            websitesContext,
+        ];
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }
@@ -127,6 +150,11 @@ export class VTabsComponent implements OnDestroy {
         if (i != -1) {
             this.tabs.splice(i, 1);
         }
+    }
+
+    switchContext(index: number) {
+        let tab = this.contexts[index]
+        tab.activate()
     }
 
     private selectItem(index: number) {

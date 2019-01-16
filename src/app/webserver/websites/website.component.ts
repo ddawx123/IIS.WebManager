@@ -8,6 +8,7 @@ import { WebSitesService } from './websites.service';
 import { ModuleUtil } from '../../utils/module';
 import { DiffUtil } from '../../utils/diff';
 import { OptionsService } from '../../main/options.service';
+import { BreadcrumbService } from 'header/breadcrumbs.service';
 
 @Component({
     template: `
@@ -15,10 +16,6 @@ import { OptionsService } from '../../main/options.service';
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
         <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs sme-focus-zone">
-                <li><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
-            </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
                     <website-general [site]="site" (modelChanged)="onModelChanged()"></website-general>
@@ -46,9 +43,11 @@ export class WebSiteComponent implements OnInit {
 
     private _original: any;
 
-    constructor(private _route: ActivatedRoute,
-                @Inject("WebSitesService") private _service: WebSitesService,
-                private _options: OptionsService) {
+    constructor(
+        @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
+        @Inject("WebSitesService") private _service: WebSitesService,
+        private _route: ActivatedRoute,
+        private _options: OptionsService) {
         this.id = this._route.snapshot.params['id'];
     }
 

@@ -1,23 +1,21 @@
 import { Component, Inject } from '@angular/core';
-
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
-
 import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
-import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
-import { Observable } from 'rxjs';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
+import { BreadcrumbService } from 'header/breadcrumbs.service';
+import { environment } from 'environments/environment';
+import { Breadcrumb, BreadcrumbRoot } from 'header/breadcrumb';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
-    top: ` + (environment.WAC ? 0 : 35) + `px;
+    top: 0px;
 }
 
 :host >>> .sidebar > vtabs .vtabs > .content {
@@ -29,6 +27,8 @@ const sidebarStyles = `
     margin-top: 50px;
 }
 `
+
+const WebServerBreadcrumb = new Breadcrumb('WebServer', ['/webserver'])
 
 @Component({
     template: `
@@ -45,9 +45,6 @@ const sidebarStyles = `
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
-                    <item [name]="'General'" [ico]="'fa fa-wrench'">
-                        <webserver-general [model]="webServer"></webserver-general>
-                    </item>
                     <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
                         <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                     </item>
@@ -60,15 +57,22 @@ const sidebarStyles = `
 export class WebServerComponent {
     webServer: WebServer;
     modules: Array<any> = [];
-    failure: string;
+    failure: string
 
     constructor(
+        @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
         private _http: HttpClient,
         private _options: OptionsService,
         private _notifications: NotificationService,
-    ) {}
+    ) {
+        if (environment.WAC) {
+            breadcrumb.goto(BreadcrumbRoot)
+        } else {
+            breadcrumb.goto(WebServerBreadcrumb)
+        }
+    }
 
     ngOnInit() {
         this.server.then(ws => {

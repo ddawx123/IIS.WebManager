@@ -39,8 +39,8 @@ export class ComponentReference {
 }
 
 export var GLOBAL_MODULES = [
-    new ComponentReference("Web Sites", "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Application Pools", "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
+    new ComponentReference("Web Sites", "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Files", "fa fa-files-o", WebFilesComponentName, "files", "/api/webserver/files/{id}"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
