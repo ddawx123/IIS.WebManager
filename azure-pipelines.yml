@@ -1,9 +1,7 @@
 resources:
 - repo: self
-
 pool:
   name: IISAdministration
-
 steps:
 - task: PowerShell@2
   displayName: 'PowerShell Script'
@@ -11,7 +9,6 @@ steps:
     targetType: ./
     filePath: build.ps1
     arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
-
 - task: NuGetCommand@2
   displayName: 'NuGet push'
   inputs:
