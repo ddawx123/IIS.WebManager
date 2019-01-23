@@ -16,5 +16,3 @@ jobs:
       targetType: ./
       filePath: build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
-
- 
