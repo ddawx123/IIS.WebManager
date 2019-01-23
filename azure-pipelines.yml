@@ -1,7 +1,7 @@
 jobs:
 - job: build
   pool:
-    name: 'IISAdministration'  # name of the pool to run this job in Hosted VS2017
+    name: 'Hosted VS2017'  # name of the pool to run this job in Hosted VS2017
     demands: 
       - msbuild
       - visualstudio
@@ -11,4 +11,16 @@ jobs:
     clean: false
     submodules: recursive  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
 
+  - task: PowerShell@2
+    inputs:
+      targetType: ./
+      filePath: build.ps1
+      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
+
+  - task: NuGetCommand@2
+    inputs:
+      command: push
+      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: external
+      publishFeedCredentials: 'IIS-WAC-MyGet'
  
