@@ -27,8 +27,8 @@
   - task: PowerShell@2
     displayName: 'PowerShell Script build.ps1'
     inputs:
-      targetType: ./
-      filePath: build.ps1
+      targetType: filePath
+      filePath: ./build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
 
   - task: NuGetCommand@2
