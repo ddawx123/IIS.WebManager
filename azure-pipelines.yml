@@ -12,9 +12,6 @@
     submodules: true  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
 
   - task: NuGetToolInstaller@0
-    #inputs:
-      #versionSpec: '4.3.0' 
-      #checkLatest: false # Optional
 
   - task: PowerShell@2
     displayName: 'PowerShell Script test.ps1'
