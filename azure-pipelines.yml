@@ -1,3 +1,4 @@
+pool: IISAdministration
 steps:
 - checkout: self
 - task: PowerShell@2
