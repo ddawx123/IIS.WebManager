@@ -16,11 +16,4 @@ jobs:
       targetType: ./
       filePath: build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
-
-  - task: NuGetCommand@2
-    inputs:
-      command: push
-      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
-      nuGetFeedType: external
-      publishFeedCredentials: 'IIS-WAC-MyGet'
  
