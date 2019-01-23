@@ -1,19 +1,24 @@
-resources:
-- repo: self
-pool:
-  name: IISAdministration
-steps:
-- task: PowerShell@2
-  displayName: 'PowerShell Script'
-  inputs:
-    targetType: ./
-    filePath: build.ps1
-    arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
+jobs:
+- job: build
+  pool:
+    name: 'IISAdministration'  # name of the pool to run this job in
+    demands: 
+      - msbuild
+      - visualstudio
+      - vstest
+  steps:
+  - checkout: self  
+  - task: PowerShell@2
+    displayName: 'PowerShell Script'
+    inputs:
+      targetType: ./
+      filePath: build.ps1
+      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet push'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: external
-    publishFeedCredentials: 'IIS-WAC-MyGet'
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: external
+      publishFeedCredentials: 'IIS-WAC-MyGet'
