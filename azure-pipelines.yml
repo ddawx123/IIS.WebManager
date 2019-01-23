@@ -1,5 +1,5 @@
 resources:
-- repo: self
+- checkout: self
 pool:
   vmImage: 'vs2017-win2016'
 steps:
