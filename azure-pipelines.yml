@@ -1,3 +1,4 @@
-pool: IISAdministration
+pool: 
+  name: IISAdministration
 steps:
 - checkout: self
