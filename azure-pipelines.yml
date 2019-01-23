@@ -1,3 +1,5 @@
+pool:
+  vmImage: ubuntu-16.04
 steps:
 - task: PowerShell@2
   displayName: 'PowerShell Script'
@@ -12,5 +14,3 @@ steps:
     packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'IIS-WAC-MyGet'
-pool:
-  name: IISAdministration
