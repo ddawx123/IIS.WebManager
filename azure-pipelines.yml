@@ -1,7 +1,7 @@
 resources:
 - repo: self
 pool:
-  name: 'IISAdmsinistration'
+  name: 'IISAdministration'
 steps:
 - task: PowerShell@2
   displayName: 'PowerShell Script'
