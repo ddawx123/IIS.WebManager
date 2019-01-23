@@ -41,9 +41,9 @@ if ($purge -and !(Get-Command "git" -ErrorAction SilentlyContinue)) {
     throw """--purge"" operation requires git in PATH"
 }
 
-if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
-    throw """--pack"" operation requires nugetin PATH"
-}
+#if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
+#    throw """--pack"" operation requires nugetin PATH"
+#}
 
 $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
 $buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
