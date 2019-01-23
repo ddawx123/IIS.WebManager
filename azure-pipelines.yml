@@ -12,7 +12,20 @@
     submodules: true  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
 
   - task: PowerShell@2
-    displayName: 'PowerShell Script'
+    displayName: 'PowerShell Script test.ps1'
+    inputs:
+      targetType: filePath
+      filePath: ./test.ps1
+      #arguments: # Optional
+      #script: '# Write your powershell commands here.' # Required when targetType == Inline
+      #errorActionPreference: 'stop' # Optional. Options: stop, continue, silentlyContinue
+      #failOnStderr: false # Optional
+      #ignoreLASTEXITCODE: false # Optional
+      #pwsh: false # Optional
+      #workingDirectory: # Optional
+
+  - task: PowerShell@2
+    displayName: 'PowerShell Script build.ps1'
     inputs:
       targetType: ./
       filePath: build.ps1
