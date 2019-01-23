@@ -1,5 +1,3 @@
-pool:
-  vmImage: ubuntu-16.04
 steps:
 - task: PowerShell@2
   displayName: 'PowerShell Script'
