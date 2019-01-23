@@ -13,6 +13,6 @@ jobs:
 
   - task: PowerShell@2
     inputs:
-      filePath: ./build.ps1
+      filePath: build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
 
