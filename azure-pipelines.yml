@@ -1,4 +1,5 @@
 steps:
+- checkout: self
 - task: PowerShell@2
   displayName: 'PowerShell Script'
   inputs:
