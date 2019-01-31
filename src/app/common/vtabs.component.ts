@@ -1,40 +1,29 @@
-import { NgModule, Component, Input, Output, ViewChild, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter, Query } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Module as Dynamic } from '../common/dynamic.component';
+import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter, Query, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { Subscription } from 'rxjs/Subscription'
-
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
 import { environment } from 'environments/environment';
+import { HierarchicalVTabsComponent } from './hierarchical-vtabs.component';
 
 @Component({
     selector: 'vtabs',
     template: `
         <div class="vtabs sme-focus-zone">
-            <ul id="Manage" class="items">
-                <ng-container *ngFor="let tab of contexts; let i = index;">
-                    <li class="hover-edit"
-                        [ngClass]="{active: tab.active}"
-                        (keyup.space)="switchContext(i)"
-                        (keyup.enter)="switchContext(i)"
-                        (click)="switchContext(i)">
-                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                    </li>
-                </ng-container>
-            </ul>
-            <ul id="Operations" class="items">
-                <ng-container *ngFor="let tab of tabs; let i = index;">
-                    <li #item
-                        class="hover-edit"
-                        [ngClass]="{active: tab.active}"
-                        (keyup.space)="selectItem(i)"
-                        (keyup.enter)="selectItem(i)"
-                        (click)="selectItem(i)">
-                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                    </li>
-                </ng-container>
+            <ul class="items">
+                <li tabindex="0"
+                    #item
+                    class="hover-edit"
+                    *ngFor="let tab of tabs; let i = index;"
+                    [ngClass]="{active: tab.active}"
+                    (keyup.space)="selectItem(i)"
+                    (keyup.enter)="selectItem(i)"
+                    (click)="selectItem(i)">
+                    <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                </li>
             </ul>
             <div class="content">
                 <ng-content></ng-content>
@@ -62,38 +51,20 @@ export class VTabsComponent implements OnDestroy {
     @Input() markLocation: boolean;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
 
-    contexts: Item[];
     tabs: Item[];
 
     private _default: string;
     private _selectedIndex = -1;
-    private _menuOn: boolean = false;
     private _tabsItems: Array<ElementRef>;
-    private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     @ViewChildren('item') private _tabList: QueryList<ElementRef>;
     @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
 
-    constructor(private _elem: ElementRef,
-        private _renderer: Renderer,
+    constructor(
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router) {
-        let webServerContext = new Item(this, this._router);
-        webServerContext.ico = 'fa fa-server';
-        webServerContext.routerLink = ['/webserver'];
-        let appPoolContext = new Item(this, this._router);
-        appPoolContext.ico = 'fa fa-cogs';
-        appPoolContext.routerLink = ['/webserver/application-pools'];
-        let websitesContext = new Item(this, this._router);
-        websitesContext.ico = 'fa fa-globe';
-        websitesContext.routerLink = ['/webserver/web-sites'];
-        this.contexts = [
-            webServerContext,
-            appPoolContext,
-            websitesContext,
-        ];
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }
@@ -152,11 +123,6 @@ export class VTabsComponent implements OnDestroy {
         }
     }
 
-    switchContext(index: number) {
-        let tab = this.contexts[index]
-        tab.activate()
-    }
-
     private selectItem(index: number) {
         let tab = this.tabs[index];
 
@@ -183,10 +149,6 @@ export class VTabsComponent implements OnDestroy {
         this._selectedIndex = index;
         this.refresh();
         this.activate.emit(this.tabs[index]);
-    }
-
-    private showMenu(show: boolean) {
-        this._menuOn = (show == null) ? true : show;
     }
 
     private refresh() {
@@ -290,12 +252,15 @@ export const TABS: any[] = [
 @NgModule({
     imports: [
         FormsModule,
-        CommonModule
+        Dynamic,
+        CommonModule,
     ],
     exports: [
+        HierarchicalVTabsComponent,
         TABS
     ],
     declarations: [
+        HierarchicalVTabsComponent,
         TABS
     ]
 })

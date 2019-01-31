@@ -1,14 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
-
 import { ModuleUtil } from '../../utils/module';
 import { DiffUtil } from '../../utils/diff';
-import { OptionsService } from '../../main/options.service';
 import { BreadcrumbService } from 'header/breadcrumbs.service';
+import { OptionsService } from 'main/options.service';
 
 @Component({
     template: `
@@ -17,9 +14,6 @@ import { BreadcrumbService } from 'header/breadcrumbs.service';
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
         <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
-                    <website-general [site]="site" (modelChanged)="onModelChanged()"></website-general>
-                </item>
                 <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
                     <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                 </item>
@@ -47,7 +41,8 @@ export class WebSiteComponent implements OnInit {
         @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
         @Inject("WebSitesService") private _service: WebSitesService,
         private _route: ActivatedRoute,
-        private _options: OptionsService) {
+        private _options: OptionsService,
+    ) {
         this.id = this._route.snapshot.params['id'];
     }
 
@@ -57,7 +52,6 @@ export class WebSiteComponent implements OnInit {
         this._service.get(this.id)
             .then(s => {
                 this.setSite(s);
-
                 ModuleUtil.initModules(this.modules, this.site, "website");
             })
             .catch(s => {

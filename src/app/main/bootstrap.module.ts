@@ -74,7 +74,8 @@ var moduleImports: any[] =  [
 
 @NgModule({
     imports: moduleImports,
-    declarations: [AppComponent,
+    declarations: [
+        AppComponent,
         HomeComponent,
         ConnectComponent,
         ConnectionPickerComponent,
@@ -86,7 +87,8 @@ var moduleImports: any[] =  [
         NotificationIndicator,
         ModalComponent,
         InformationComponent,
-        NewVersionNotificationComponent],
+        NewVersionNotificationComponent,
+    ],
     providers: [
         HttpClient,
         NotificationService,

@@ -1,31 +1,18 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-
-import {ModuleUtil} from '../../utils/module';
 import {DiffUtil} from '../../utils/diff';
-import {OptionsService} from '../../main/options.service';
-
-
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
 import { BreadcrumbService } from 'header/breadcrumbs.service';
-
+import { OptionsService } from 'main/options.service';
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
-        <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
-
-        <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
-            <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
-                    <webapp-general [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
-                </item>
-                <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </item>
-            </vtabs>
+        <div *ngIf="app">
+            <webapp-header [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
+            <hierarchical-vtabs [markLocation]="true" [resourceName]="'webapp'" [getResource]="getResource"></hierarchical-vtabs>
         </div>
     `,
     styles: [`
@@ -37,34 +24,30 @@ import { BreadcrumbService } from 'header/breadcrumbs.service';
         }
     `]
 })
-export class WebAppComponent implements OnInit {
+export class WebAppComponent {
     id: string;
     app: WebApp;
     notFound: boolean;
-    modules: Array<any> = [];
-    
     private _original: any;
+
+    getResource = this._service.get(this.id).then(app => {
+        this.setApp(app)
+        return app
+    }).catch(s => {
+        if (s && s.status == '404') {
+            this.notFound = true;
+        }
+    })
+
 
     constructor(
         @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
         @Inject("WebAppsService") private _service: WebAppsService,
         private _route: ActivatedRoute,
         private _options: OptionsService,
-        private _router: Router) {
+        private _router: Router,
+    ) {
         this.id = this._route.snapshot.params["id"];
-    }
-
-    ngOnInit() {
-        this._service.get(this.id)
-            .then(app => {
-                this.setApp(app);
-                ModuleUtil.initModules(this.modules, this.app, "webapp");
-            })
-            .catch(s => {
-                if (s && s.status == '404') {
-                    this.notFound = true;
-                }
-            });
     }
 
     onModelChanged() {

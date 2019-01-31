@@ -38,15 +38,18 @@ export class ComponentReference {
     constructor(public name: string, public ico: string, public component_name: string, public api_name: string, public api_path: string) {}
 }
 
+export const CertificatesModuleName = "Certificates"
+export const ApplicationPoolsModuleName = "Application Pools"
+export const WebSitesModuleName = "Web Sites"
 export var GLOBAL_MODULES = [
-    new ComponentReference("Application Pools", "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
-    new ComponentReference("Web Sites", "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
+    new ComponentReference(ApplicationPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
+    new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Files", "fa fa-files-o", WebFilesComponentName, "files", "/api/webserver/files/{id}"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
     new ComponentReference("Authorization", "fa fa-user-o", AuthorizationComponentName, "authorization", "/api/webserver/authorization/{id}"),
-    new ComponentReference("Certificates", "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
+    new ComponentReference(CertificatesModuleName, "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
     new ComponentReference("Central Certificate Store", "fa fa-certificate", CentralCertificateComponentName, "central_certificates", "/api/webserver/centralized-certificates/{id}"),
     new ComponentReference("Default Documents", "fa fa-file-text-o", DefaultDocumentsComponentName, "default_document", "/api/webserver/default-documents/{id}"),
     new ComponentReference("Directory Browsing", "fa fa-folder-open-o", DirectoryBrowsingComponentName, "directory_browsing", "/api/webserver/directory-browsing/{id}"),

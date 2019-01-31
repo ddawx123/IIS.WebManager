@@ -1,10 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Type } from '@angular/core';
 import { ModuleUtil } from '../utils/module';
-import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { ComponentReference, FilesComponentName } from '../main/settings';
+import { ComponentReference, FilesComponentName, CertificatesModuleName, ApplicationPoolsModuleName, WebSitesModuleName } from '../main/settings';
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
@@ -12,21 +11,8 @@ import { Runtime } from 'runtime/runtime';
 import { BreadcrumbService } from 'header/breadcrumbs.service';
 import { environment } from 'environments/environment';
 import { Breadcrumb, BreadcrumbRoot } from 'header/breadcrumb';
-
-const sidebarStyles = `
-:host >>> .sidebar > vtabs .vtabs > .items {
-    top: 0px;
-}
-
-:host >>> .sidebar > vtabs .vtabs > .content {
-    top: 96px;
-}
-
-.not-installed {
-    text-align: center;
-    margin-top: 50px;
-}
-`
+import { OptionsService } from 'main/options.service';
+import { WebServerGeneralComponent } from './webserver-general.component';
 
 const WebServerBreadcrumb = new Breadcrumb('WebServer', ['/webserver'])
 
@@ -43,51 +29,42 @@ const WebServerBreadcrumb = new Breadcrumb('WebServer', ['/webserver'])
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
-                    <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                        <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                    </item>
-                </vtabs>
-            </div>
+            <hierarchical-vtabs [markLocation]="true" [resourceName]="'webserver'" [getResource]="getResource" [sideLoadCallback]="sideLoadCallback" [generalTabType]="generalTabType"></hierarchical-vtabs>
         </div>
-    `,
-    styles: [ sidebarStyles ]
+    `
 })
 export class WebServerComponent {
+    generalTabType: Type<WebServerGeneralComponent>;
     webServer: WebServer;
-    modules: Array<any> = [];
-    failure: string
+    failure: string;
+    getResource = this.server.then(ws => (this.webServer = ws))
+    sideLoadCallback = (modules: Array<any>) => {
+        ModuleUtil.addModule(modules, CertificatesModuleName);
+        // HACK: changing UI without changing API
+        modules.splice(modules.findIndex(m => m.name == ApplicationPoolsModuleName), 1)
+        modules.splice(modules.findIndex(m => m.name == WebSitesModuleName), 1)
+        // Insert files global module after application pools
+        let index = modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
+        modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
+        this._http.head(CertificatesServiceURL, null, false)
+            .catch(_ => {
+                modules.splice(modules.findIndex(m => m.name == CertificatesModuleName), 1)
+            });
+    }
 
     constructor(
         @Inject('Breadcrumb') public breadcrumb: BreadcrumbService,
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
         private _http: HttpClient,
-        private _options: OptionsService,
         private _notifications: NotificationService,
+        private _options: OptionsService,
     ) {
         if (environment.WAC) {
             breadcrumb.goto(BreadcrumbRoot)
         } else {
             breadcrumb.goto(WebServerBreadcrumb)
         }
-    }
-
-    ngOnInit() {
-        this.server.then(ws => {
-            this.webServer = ws;
-            ModuleUtil.initModules(this.modules, this.webServer, "webserver");
-            ModuleUtil.addModule(this.modules, "Certificates");
-
-            // Insert files global module after application pools
-            let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
-            this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
-            this._http.head(CertificatesServiceURL, null, false)
-                .catch(_ => {
-                    this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
-                });
-        })
     }
 
     get service() {

@@ -1,17 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgModel } from '@angular/forms';
-
 import { Selector } from '../../common/selector';
-
 import { ApiFile } from '../../files/file';
-import { WebSite, Binding } from './site';
-import { WebSitesService } from './websites.service';
-import { BindingList } from './binding-list.component';
-
+import { WebSite } from './site';
 import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
-import { AppPoolsService } from '../app-pools/app-pools.service';
-
 
 @Component({
     selector: 'website-general',
@@ -20,17 +12,17 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
             <tab [name]="'Settings'">
                 <fieldset>
                     <label>Name</label>
-                    <input class="form-control name" type="text" [(ngModel)]="site.name" throttle (modelChanged)="onModelChanged()" required/>
+                    <input class="form-control name" type="text" [(ngModel)]="model.name" throttle (modelChanged)="onModelChanged()" required/>
                 </fieldset>
                 <fieldset class="path">
                     <label>Physical Path</label>
-                    <input type="text" class="form-control left-with-button" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
+                    <input type="text" class="form-control left-with-button" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" throttle required />
                     <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
-                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset>
                     <label>Auto Start</label>
-                    <switch class="block" [(model)]="site.server_auto_start" (modelChanged)="onModelChanged()">{{site.server_auto_start ? "On" : "Off"}}</switch>
+                    <switch class="block" [(model)]="model.server_auto_start" (modelChanged)="onModelChanged()">{{model.server_auto_start ? "On" : "Off"}}</switch>
                 </fieldset>
                 <fieldset class="inline-block">
                     <label>Custom Protocols</label>
@@ -38,27 +30,27 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                 </fieldset>
                 <fieldset class="inline-block" *ngIf="custom_protocols">
                     <label>Protocols</label>
-                    <input class="form-control" type="text" [(ngModel)]="site.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
+                    <input class="form-control" type="text" [(ngModel)]="model.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
                 </fieldset>
             </tab>
             <tab [name]="'Bindings'">
-                <binding-list *ngIf="site.bindings" [(model)]="site.bindings" (modelChange)="onModelChanged()"></binding-list>
+                <binding-list *ngIf="model.bindings" [(model)]="model.bindings" (modelChange)="onModelChanged()"></binding-list>
             </tab>
             <tab [name]="'Limits'">
-                <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
+                <limits [model]="model.limits" (modelChanged)="onModelChanged()"></limits>
             </tab>
             <tab [name]="'Application Pool'">
                 <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
                 <selector #poolSelect class="container-fluid create">
                     <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>
-                <app-pool-details [model]="site.application_pool"></app-pool-details>
+                <app-pool-details [model]="model.application_pool"></app-pool-details>
             </tab>
         </tabs>
     `
 })
 export class WebSiteGeneralComponent {
-    @Input() site: WebSite;
+    @Input() model: WebSite;
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('poolSelect') poolSelect: Selector;
@@ -68,8 +60,8 @@ export class WebSiteGeneralComponent {
     custom_protocols: boolean;
 
     ngOnInit() {
-        this.custom_protocols = !(this.site.enabled_protocols.toLowerCase() == "http" ||
-                                  this.site.enabled_protocols.toLowerCase() == "https");
+        this.custom_protocols = !(this.model.enabled_protocols.toLowerCase() == "http" ||
+                                  this.model.enabled_protocols.toLowerCase() == "https");
     }
 
     onModelChanged() {
@@ -106,25 +98,25 @@ export class WebSiteGeneralComponent {
     onAppPoolSelected(pool) {
         this.poolSelect.close();
 
-        if (this.site.application_pool && this.site.application_pool.id == pool.id) {
+        if (this.model.application_pool && this.model.application_pool.id == pool.id) {
             return;
         }
 
-        this.site.application_pool = pool;
+        this.model.application_pool = pool;
 
         this.onModelChanged();
     }
 
     useCustomProtocols(value: boolean) {
         if (!value) {
-            this.site.enabled_protocols = "http";
+            this.model.enabled_protocols = "http";
             this.onModelChanged();
         }
     }
 
     private onSelectPath(event: Array<ApiFile>) {
         if (event.length == 1) {
-            this.site.physical_path = event[0].physical_path;
+            this.model.physical_path = event[0].physical_path;
             this.onModelChanged();
         }
     }
