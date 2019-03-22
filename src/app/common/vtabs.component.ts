@@ -2,7 +2,8 @@ import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentCh
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs'
+import { Subscription } from 'rxjs';
+import { Module as DynamicModule } from './dynamic.module';
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
 import { environment } from 'environments/environment';
@@ -260,6 +261,7 @@ export const TABS: any[] = [
 
 @NgModule({
     imports: [
+        DynamicModule,
         FormsModule,
         CommonModule
     ],

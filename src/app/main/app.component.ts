@@ -1,7 +1,7 @@
 import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Angulartics2 } from 'angulartics2';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
@@ -79,7 +79,7 @@ export class AppComponent implements OnInit {
     @ViewChild('mainContainer') mainContainer: ElementRef;
 
     ngOnInit() {
-        this.runtime.InitContext()
+        this.runtime.OnAppInit()
         this._windowService.initialize(this.mainContainer, this._renderer)
     }
 

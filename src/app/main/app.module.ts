@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Inject, Type } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Angulartics2Module } from 'angulartics2';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { Module as BModel } from '../common/bmodel';
 import { Module as NotFound } from '../common/notfound.component';
 import { Module as CheckBox } from '../common/checkbox.component';
-import { Module as Dynamic } from '../common/dynamic.component';
+import { Module as Dynamic } from '../common/dynamic.module';
 import { Module as VTabs } from '../common/vtabs.component';
 import { Module as AutoFocus } from '../common/focus';
 import { Module as Tooltip } from '../common/tooltip.component';
@@ -44,14 +44,9 @@ import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModulesAddon, ProvidersAddon, RoutesAddon } from './app.addon';
-
-function LoadSettingsModule() {
-    return import('../settings/settings.module').then(m => m.SettingsModule)
-}
-
-function LoadWebServerModule() {
-    return import('../webserver/webserver.module').then(m => m.WebServerModule)
-}
+import { Runtime } from 'runtime/runtime';
+import { SettingsModule } from 'settings/settings.module';
+import { WebServerModule } from 'webserver/webserver.module';
 
 @NgModule({
     imports: [
@@ -59,14 +54,14 @@ function LoadWebServerModule() {
             RoutesAddon.concat(
                 { path: 'get', component: GetComponent },
                 { path: 'connect', component: ConnectComponent },
-                { path: 'settings', loadChildren: LoadSettingsModule  },
-                { path: 'webserver', loadChildren: LoadWebServerModule  },
+                { path: 'settings', loadChildren: () => SettingsModule  },
+                { path: 'webserver', loadChildren: () => WebServerModule  },
                 { path: ':section', component: HomeComponent },
                 // Not Found
                 { path: '**', component: NotFound }
             ),
             {
-                enableTracing: true,
+                enableTracing: false,
                 initialNavigation: true,
             }),
         NgbModule,
@@ -126,4 +121,10 @@ function LoadWebServerModule() {
         RouterModule,
     ]
 })
-export class AppModule{}
+export class AppModule {
+    constructor(
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
+        this.runtime.OnModuleCreate();
+    }
+}

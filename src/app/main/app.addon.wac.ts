@@ -29,13 +29,9 @@ export const ProvidersAddon: Provider[] = [
     { provide: "Runtime", useClass: WACRuntime },
 ];
 
-function LoadWACModule() {
-    return import('../runtime/wac/components/wac.module').then(m => m.WACModule);
-}
-
 export const RoutesAddon: Routes = <Routes>[
     { path: '', redirectTo: '/webserver', pathMatch: 'full' },
     { path: 'idle', component: WACIdleComponent },
     { path: 'install', component: InstallComponent },
-    { path: 'wac', loadChildren: LoadWACModule },
+    { path: 'wac', loadChildren: () => WACModule },
 ]

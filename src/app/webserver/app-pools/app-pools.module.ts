@@ -6,7 +6,7 @@ import { Module as BModel } from '../../common/bmodel';
 import { Module as NotFound } from '../../common/notfound.component';
 import { Module as CheckBox } from '../../common/checkbox.component';
 import { Module as Switch } from '../../common/switch.component';
-import { Module as Dynamic } from '../../common/dynamic.component';
+import { Module as Dynamic } from '../../common/dynamic.module';
 import { Module as Selector } from '../../common/selector';
 import { Module as VTabs } from '../../common/vtabs.component';
 import { Module as Loading } from '../../notification/loading.component';

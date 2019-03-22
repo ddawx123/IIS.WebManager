@@ -27,148 +27,146 @@ import { WebSiteListComponentName,
     WarningComponentName,
     AppModuleName
 } from '../main/settings'
+import { WebSitesModule } from 'webserver/websites/websites.module';
+import { AppPoolsModule } from 'webserver/app-pools/app-pools.module';
+import { AppModule } from 'main/app.module';
+import { WebFilesModule } from 'webserver/files/webfiles.module';
+import { WebAppsModule } from 'webserver/webapps/webapps.module';
+import { VdirsModule } from 'webserver/vdirs/vdirs.module';
+import { AuthenticationModule } from 'webserver/authentication/authentication.module';
+import { AuthorizationModule } from 'webserver/authorization/authorization.module';
+import { CertificatesModule } from 'certificates/certificates.module';
+import { CentralCertificateModule } from 'webserver/central-certificates/central-certificate.module';
+import { DefaultDocumentsModule } from 'webserver/default-documents/default-documents.module';
+import { DirectoryBrowsingModule } from 'webserver/directory-browsing/directory-browsing.module';
+import { IpRestrictionsModule } from 'webserver/ip-restrictions/ip-restrictions.module';
+import { LoggingModule } from 'webserver/logging/logging.module';
+import { MimeMapsModule } from 'webserver/mime-maps/mime-maps.module';
+import { MonitoringModule } from 'webserver/monitoring/monitoring.module';
+import { ModulesModule } from 'webserver/modules/modules.module';
+import { CompressionModule } from 'webserver/compression/compression.module';
+import { RequestFilteringModule } from 'webserver/request-filtering/request-filtering.module';
+import { Module as WarningsModule } from 'notification/warning.component';
+import { Module as FilesUploadModule } from 'files/upload.component';
+import { FilesModule } from 'files/files.module';
+import { UrlRewriteModule } from 'webserver/url-rewrite/url-rewrite.module';
+import { StaticContentModule } from 'webserver/static-content/static-content.module';
+import { RequestTracingModule } from 'webserver/request-tracing/request-tracing.module';
+import { HttpResponseHeadersModule } from 'webserver/http-response-headers/http-response-headers.module';
 
 
 export class ComponentLoader {
     public static async LoadAsync(compiler: Compiler, component: ComponentReference): Promise<ModuleWithComponentFactories<{}>> {
         // cannot assign module type as property of ComponentReference to avoid circular reference
-        var moduleType : Promise<Type<{}>> = null
+        var moduleType: Type<any>;
         switch (component.component_name) {
             case WebSiteListComponentName:
-                moduleType = import('../webserver/websites/websites.module').then(m => {
-                    return m.WebSitesModule
-                }) ; break;
+                moduleType = WebSitesModule;
+                break;
 
             case AppPoolComponentName:
-                moduleType = import('../webserver/app-pools/app-pools.module').then(m => {
-                    return m.AppPoolsModule
-                }) ; break;
+                moduleType = AppPoolsModule;
+                break;
 
             case WebFilesComponentName:
-                moduleType = import('../webserver/files/webfiles.module').then(m => {
-                    return m.WebFilesModule
-                }) ; break;
+                moduleType = WebFilesModule;
+                break;
 
             case WebAppListComponentName:
-                moduleType = import('../webserver/webapps/webapps.module').then(m => {
-                    return m.WebAppsModule
-                }) ; break;
+                moduleType = WebAppsModule;
+                break;
 
             case VdirListComponentName:
-                moduleType = import('../webserver/vdirs/vdirs.module').then(m => {
-                    return m.VdirsModule
-                }) ; break;
+                moduleType = VdirsModule;
+                break;
 
             case AuthenticationComponentName:
-                moduleType = import('../webserver/authentication/authentication.module').then(m => {
-                    return m.AuthenticationModule
-                }) ; break;
+                moduleType = AuthenticationModule;
+                break;
 
             case AuthorizationComponentName:
-                moduleType = import('../webserver/authorization/authorization.module').then(m => {
-                    return m.AuthorizationModule
-                }) ; break;
+                moduleType = AuthorizationModule;
+                break;
 
             case CertificatesComponentName:
-                moduleType = import('../certificates/certificates.module').then(m => {
-                    return m.CertificatesModule
-                }) ; break;
+                moduleType = CertificatesModule;
+                break;
 
             case CentralCertificateComponentName:
-                moduleType = import('../webserver/central-certificates/central-certificate.module').then(m => {
-                    return m.CentralCertificateModule
-                }) ; break;
+                moduleType = CentralCertificateModule;
+                break;
 
             case DefaultDocumentsComponentName:
-                moduleType = import('../webserver/default-documents/default-documents.module').then(m => {
-                    return m.DefaultDocumentsModule
-                }) ; break;
+                moduleType = DefaultDocumentsModule;
+                break;
 
             case DirectoryBrowsingComponentName:
-                moduleType = import('../webserver/directory-browsing/directory-browsing.module').then(m => {
-                    return m.DirectoryBrowsingModule
-                }) ; break;
+                moduleType = DirectoryBrowsingModule;
+                break;
 
             case IpRestrictionsComponentName:
-                moduleType = import('../webserver/ip-restrictions/ip-restrictions.module').then(m => {
-                    return m.IpRestrictionsModule
-                }) ; break;
+                moduleType = IpRestrictionsModule;
+                break;
 
             case LoggingComponentName:
-                moduleType = import('../webserver/logging/logging.module').then(m => {
-                    return m.LoggingModule
-                }) ; break;
+                moduleType = LoggingModule;
+                break;
 
             case MimeMapsComponentName:
-                moduleType = import('../webserver/mime-maps/mime-maps.module').then(m => {
-                    return m.MimeMapsModule
-                }) ; break;
+                moduleType = MimeMapsModule;
+                break;
 
             case MonitoringComponentName:
-                moduleType = import('../webserver/monitoring/monitoring.module').then(m => {
-                    return m.MonitoringModule
-                }) ; break;
+                moduleType = MonitoringModule;
+                break;
 
             case ModulesComponentName:
-                moduleType = import('../webserver/modules/modules.module').then(m => {
-                    return m.ModulesModule
-                }) ; break;
+                moduleType = ModulesModule;
+                break;
 
             case CompressionComponentName:
-                moduleType = import('../webserver/compression/compression.module').then(m => {
-                    return m.CompressionModule
-                }) ; break;
+                moduleType = CompressionModule;
+                break;
 
             case RequestFilteringComponentName:
-                moduleType = import('../webserver/request-filtering/request-filtering.module').then(m => {
-                    return m.RequestFilteringModule
-                }) ; break;
+                moduleType = RequestFilteringModule;
+                break;
 
             case HttpResponseHeadersComponentName:
-                moduleType = import('../webserver/http-response-headers/http-response-headers.module').then(m => {
-                    return m.HttpResponseHeadersModule
-                }) ; break;
+                moduleType = HttpResponseHeadersModule;
+                break;
 
             case RequestTracingComponentName:
-                moduleType = import('../webserver/request-tracing/request-tracing.module').then(m => {
-                    return m.RequestTracingModule
-                }) ; break;
+                moduleType = RequestTracingModule;
+                break;
 
             case StaticContentComponentName:
-                moduleType = import('../webserver/static-content/static-content.module').then(m => {
-                    return m.StaticContentModule
-                }) ; break;
+                moduleType = StaticContentModule;
+                break;
 
             case UrlRewriteComponentName:
-                moduleType = import('../webserver/url-rewrite/url-rewrite.module').then(m => {
-                    return m.UrlRewriteModule
-                }) ; break;
+                moduleType = UrlRewriteModule;
+                break;
 
             case FilesComponentName:
-                moduleType = import('../files/files.module').then(m => {
-                    return m.FilesModule
-                }) ; break;
+                moduleType = FilesModule;
+                break;
 
             case UploadComponentName:
-                moduleType = import('../files/upload.component').then(m => {
-                    return m.Module
-                }) ; break;
+                moduleType = FilesUploadModule;
+                break;
 
             case WarningComponentName:
-                moduleType = import('../notification/warning.component').then(m => {
-                return m.Module
-            }) ; break;
+                moduleType = WarningsModule;
+                break;
 
             case AppModuleName:
-                moduleType = import('../main/app.module').then(m => {
-                    return m.AppModule
-                }) ; break;
+                moduleType = AppModule;
+                break;
 
             default:
-                throw new Error("Unexpected component " + component.component_name)
+                throw new Error("Unexpected component " + component.component_name);
         }
-        return moduleType.then(m => {
-            return compiler.compileModuleAndAllComponentsAsync(m)
-        })
+        return compiler.compileModuleAndAllComponentsAsync(moduleType);
     }
 }

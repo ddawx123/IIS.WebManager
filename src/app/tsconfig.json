@@ -6,15 +6,15 @@
         "experimentalDecorators": true,
         "noImplicitAny": false,
         "lib": [
-            "es6",
-            "dom"
+          "es2015",
+          "dom"
         ],
         "mapRoot": "./",
         "module": "commonjs",
         "moduleResolution": "node",
         "rootDir": "app",
         "sourceMap": true,
-        "target": "es5",
+        "target": "es2015",
         "noEmitOnError": true,
         "types": ["node"],
         "typeRoots": [

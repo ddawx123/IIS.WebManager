@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
-
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
-
 import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
@@ -10,10 +8,8 @@ import { ComponentReference, FilesComponentName } from '../main/settings';
 import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
-import { Observable } from 'rxjs';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {

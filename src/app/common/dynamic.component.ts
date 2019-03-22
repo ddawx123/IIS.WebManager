@@ -1,7 +1,5 @@
 
-import {NgModule, Directive, Input, ReflectiveInjector, ModuleWithComponentFactories, ComponentFactory, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Directive, Input, ReflectiveInjector, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
 import {ComponentLoader} from './component-loader';
 import { ComponentReference } from '../main/settings';
 
@@ -118,17 +116,3 @@ export class DynamicComponentArgs {
     module: string;
     data: any;
 }
-
-@NgModule({
-    imports: [
-        FormsModule,
-        CommonModule
-    ],
-    exports: [
-        DynamicComponent
-    ],
-    declarations: [
-        DynamicComponent
-    ]
-})
-export class Module { }

@@ -6,27 +6,11 @@ import { WebSitesModule } from './websites/websites.module'
 import { WebAppsModule } from './webapps/webapps.module'
 import { VdirsModule } from './vdirs/vdirs.module'
 
-export function LoadAppPoolsModule() {
-    return import('./app-pools/app-pools.module').then(m => m.AppPoolsModule)
-}
-
-export function LoadWebSitesModule() {
-    return import('./websites/websites.module').then(m => m.WebSitesModule)
-}
-
-export function LoadWebAppsModule() {
-    return import('./webapps/webapps.module').then(m => m.WebAppsModule)
-}
-
-export function LoadVDirsModule() {
-    return import('./vdirs/vdirs.module').then(m => m.VdirsModule)
-}
-
 const appRoutes: Routes = [
-    { path: 'app-pools', loadChildren: LoadAppPoolsModule },
-    { path: 'websites', loadChildren: LoadWebSitesModule },
-    { path: 'webapps', loadChildren: LoadWebAppsModule },
-    { path: 'vdirs', loadChildren: LoadVDirsModule },
+    { path: 'app-pools', loadChildren: () => AppPoolsModule },
+    { path: 'websites', loadChildren: () => WebSitesModule },
+    { path: 'webapps', loadChildren: () => WebAppsModule },
+    { path: 'vdirs', loadChildren: () => VdirsModule },
     { path: '', component: WebServerComponent },
     { path: ':section', component: WebServerComponent }
 ]
