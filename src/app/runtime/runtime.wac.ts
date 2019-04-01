@@ -55,6 +55,7 @@ export class WACRuntime implements Runtime {
         private appContext: AppContextService,
         private connectService: ConnectService,
         private loggerFactory: LoggerFactory,
+        private navigationService: NavigationService,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
     ){
@@ -66,58 +67,7 @@ export class WACRuntime implements Runtime {
     }
 
     public OnAppInit(): void {
-        let navigationService: NavigationService = this.injector.get(NavigationService);
-        this.appContext.ngInit({ navigationService: navigationService });
-        let rpc = this.appContext.rpc;
-        // Implementation copied from rpc.register with difference noted in the comments
-        rpc.rpcManager.rpcInbound.register(RpcOutboundCommands[RpcOutboundCommands.Init], (data: RpcInitDataInternal) => {
-            // node context is used before passing request to handler.
-            rpc.changeActiveState(true);
-            const self = MsftSme.self();
-            self.Init.sessionId = data.sessionId;
-            self.Environment.modules = data.modules;
-
-            if (!MsftSme.isNullOrUndefined(self.Resources.accessibilityMode) && !MsftSme.isNullOrUndefined(data.accessibilityMode)) {
-                self.Resources.accessibilityMode = data.accessibilityMode;
-                CoreEnvironment.accessibilityManager.changeAccessibilityMode(self.Resources.accessibilityMode);
-            }
-
-            // ensure that global environment settings persist across origins
-            if (!MsftSme.isNullOrUndefined(data.consoleDebug) && MsftSme.consoleDebug() !== data.consoleDebug) {
-                MsftSme.consoleDebug(data.consoleDebug);
-            }
-
-            if (!MsftSme.isNullOrUndefined(data.sideLoad)) {
-                let sideLoadKeys = Object.keys(MsftSme.sideLoad() || {});
-                let dataSideLoadKeys = Object.keys(data.sideLoad || {});
-
-                if (sideLoadKeys.length !== dataSideLoadKeys.length || sideLoadKeys.some(key => !!data.sideLoad[key])) {
-                    MsftSme.sideLoadReset();
-                    dataSideLoadKeys.forEach(k => MsftSme.sideLoad(k));
-                }
-            }
-
-            if (!MsftSme.isNullOrUndefined(data.experiments)) {
-                let experiments = MsftSme.experiments();
-                if (experiments.length !== data.experiments.length || experiments.some((v, i) => v !== data.experiments[i])) {
-                    MsftSme.experiments(data.experiments);
-                }
-            }
-
-            // Skipping loading css
-            // CoreEnvironment.assetManager.loadAssets(data.theme, data.assets);
-            const localeLoader = CoreEnvironment.moduleLoadLocale({ id: data.localeRegional || data.locale, neutral: data.locale });
-            // let passingData = <RpcInitData>{
-            //     locale: data.locale,
-            //     localeRegional: data.localeRegional,
-            //     sessionId: data.sessionId
-            // };
-            return localeLoader
-                .then(() => rpc.seekShell(RpcSeekMode.Create))
-                // Note that the handler callback simply set navigationService.active to true, which should already been the case
-                // .then(() => handler(passingData))
-                .then(() => { return { version: rpcVersion }; });
-        })
+        this.appContext.ngInit({ navigationService: this.navigationService });
     }
 
     public OnAppDestroy(): void {
